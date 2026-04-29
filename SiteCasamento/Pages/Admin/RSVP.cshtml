@@ -1,0 +1,121 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.RSVPModel
+
+@{
+    ViewData["Title"] = "Admin - RSVP";
+}
+
+<div class="container mt-5">
+
+    <!-- VOLTAR -->
+    <a asp-page="/Admin/Dashboard"
+       class="btn btn-link px-0 mb-3">
+        <i class="bi bi-arrow-left"></i> Voltar para o Dashboard
+    </a>
+
+    <!-- CABEÇALHO -->
+    <div class="mb-4">
+        <h3 class="fw-bold mb-1">RSVP</h3>
+        <p class="text-muted mb-0">
+            Confirmações de presença
+        </p>
+    </div>
+
+    <!-- RESUMO -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="fw-bold">Confirmados</div>
+                    <div class="display-6">@Model.TotalConfirmados</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="fw-bold">Recusados</div>
+                    <div class="display-6">@Model.TotalRecusados</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="fw-bold">Pendentes</div>
+                    <div class="display-6">@Model.TotalPendentes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="mb-3">
+        <a asp-page="./RSVP"
+           class="btn btn-sm btn-outline-secondary @(Model.Filtro == null ? "active" : "")">
+            Todos
+        </a>
+
+        <a asp-page="./RSVP"
+           asp-route-filtro="confirmado"
+           class="btn btn-sm btn-outline-secondary @(Model.Filtro == "confirmado" ? "active" : "")">
+            Confirmados
+        </a>
+
+        <a asp-page="./RSVP"
+           asp-route-filtro="recusado"
+           class="btn btn-sm btn-outline-secondary @(Model.Filtro == "recusado" ? "active" : "")">
+            Recusados
+        </a>
+
+        <a asp-page="./RSVP"
+           asp-route-filtro="pendente"
+           class="btn btn-sm btn-outline-secondary @(Model.Filtro == "pendente" ? "active" : "")">
+            Pendentes
+        </a>
+    </div>
+
+    <!-- TABELA -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Convite</th>
+                        <th>Pessoa</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var r in Model.Itens)
+                    {
+                        <tr>
+                            <td>@r.Convite</td>
+                            <td>@r.Pessoa</td>
+                            <td>
+                                @if (r.Vai == true)
+                                {
+                                    <span class="badge bg-success">Confirmado</span>
+                                }
+                                else if (r.Vai == false)
+                                {
+                                    <span class="badge bg-danger">Recusado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Pendente</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>

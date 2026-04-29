@@ -1,0 +1,53 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.PresenteCreateModel
+@{
+    ViewData["Title"] = "Novo Presente";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold">Novo Presente</h3>
+
+    <!-- Mostra erros de validação (recomendado) -->
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <form method="post" class="mt-3 card p-4 shadow-sm border-0">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input class="form-control" asp-for="Presente.Nome" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" asp-for="Presente.Descricao" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Imagem URL</label>
+            <input class="form-control" asp-for="Presente.ImagemUrl" placeholder="/images/exemplo.jpg" />
+            <div class="form-text">Dica: coloque imagens em <code>wwwroot/images</code> e use <code>/images/arquivo.jpg</code></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Valor</label>
+            <input class="form-control" asp-for="Presente.Valor" type="number" step="0.01" min="0" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Link de compra (Amazon/Mercado Livre)</label>
+            <input class="form-control" asp-for="Presente.LinkCompra" placeholder="https://..." />
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">
+                Salvar
+            </button>
+
+            <a asp-page="/Admin/Convites"
+               class="btn btn-outline-secondary">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>

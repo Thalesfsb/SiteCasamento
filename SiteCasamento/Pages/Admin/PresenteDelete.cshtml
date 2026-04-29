@@ -1,0 +1,19 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.PresenteDeleteModel
+@{
+    ViewData["Title"] = "Excluir Presente";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold text-danger">Excluir Presente</h3>
+
+    <div class="alert alert-warning mt-3">
+        Tem certeza que deseja excluir <strong>@Model.Presente?.Nome</strong>?
+    </div>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <button class="btn btn-danger">Sim, excluir</button>
+        <a class="btn btn-outline-secondary" asp-page="/Admin/Presentes">Cancelar</a>
+    </form>
+</div>

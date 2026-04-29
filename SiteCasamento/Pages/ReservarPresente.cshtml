@@ -1,0 +1,76 @@
+﻿@page
+@model ReservarPresenteModel
+@using SiteCasamento.Models
+@{
+    ViewData["Title"] = "Reservar Presente";
+}
+
+<div class="container mt-5" style="max-width: 720px;">
+
+    <!-- VOLTAR -->
+    <a href="/Presentes" class="btn btn-link px-0 mb-3">
+        <i class="bi bi-arrow-left"></i> Voltar para a lista de presentes
+    </a>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+
+            <h3 class="title-serif mb-2">
+                @Model.Presente?.Nome
+            </h3>
+
+            <p class="text-muted mb-3">
+                @Model.Presente?.Descricao
+            </p>
+
+            <p class="fw-bold mb-4">
+                Valor sugerido: R$ @Model.Presente?.Valor.ToString("N2")
+            </p>
+
+            @if (Model.Sucesso)
+            {
+                <div class="alert alert-success">
+                    Presente reservado com sucesso ❤️<br />
+                    Obrigado, <strong>@Model.NomeConvidado</strong>.
+                </div>
+
+                <p class="text-muted mb-4">
+                    Agora você pode escolher como deseja presentear.
+                </p>
+
+                <div class="d-grid gap-3">
+                    <a href="/Pix/@Model.Presente!.Id"
+                       class="btn btn-primary btn-lg">
+                        Presentear via PIX
+                    </a>
+
+                    <a href="/ConfirmarCompraExterna?id=@Model.Presente!.Id"
+                       class="btn btn-outline-primary">
+                        Já comprei em outra loja
+                    </a>
+
+                    <a href="/Presentes" class="btn btn-link">
+                        Voltar para a lista
+                    </a>
+                </div>
+            }
+            else
+            {
+                <form method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-4 text-start">
+                        <label class="form-label">Seu nome</label>
+                        <input class="form-control"
+                               asp-for="NomeConvidado"
+                               placeholder="Ex: Maria Silva" />
+                    </div>
+
+                    <button class="btn btn-primary btn-lg w-100">
+                        Confirmar reserva
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

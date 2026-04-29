@@ -1,0 +1,19 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.PessoaDeleteModel
+@{
+    ViewData["Title"] = "Excluir Pessoa";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold text-danger">Excluir Pessoa</h3>
+
+    <div class="alert alert-warning mt-3">
+        Tem certeza que deseja excluir <strong>@Model.Pessoa?.Nome</strong>?
+    </div>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <button class="btn btn-danger">Sim, excluir</button>
+        <a class="btn btn-link" asp-page="/Admin/ConvitePessoas" asp-route-id="@Model.Pessoa?.ConviteId">Cancelar</a>
+    </form>
+</div>

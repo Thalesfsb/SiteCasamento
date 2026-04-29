@@ -1,0 +1,21 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.ConviteDeleteModel
+@{
+    ViewData["Title"] = "Excluir Convite";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold text-danger">Excluir Convite</h3>
+
+    <div class="alert alert-warning mt-3">
+        Tem certeza que deseja excluir o convite <strong>@Model.Convite?.NomeExibicao</strong>?
+        <br />
+        <small class="text-muted">Isso também remove as pessoas desse convite.</small>
+    </div>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <button class="btn btn-danger">Sim, excluir</button>
+        <a class="btn btn-link" asp-page="/Admin/Convites">Cancelar</a>
+    </form>
+</div>

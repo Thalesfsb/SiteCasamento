@@ -1,0 +1,93 @@
+﻿@page
+@model RSVPConfirmarModel
+@{
+    ViewData["Title"] = "Quem irá?";
+}
+
+<div class="container mt-5" style="max-width: 760px;">
+
+    <h2 class="title-serif text-center mb-1">
+        Quem irá?
+    </h2>
+
+    <p class="text-center text-muted mb-4">
+        Convite: <strong>@Model.Convite?.NomeExibicao</strong>
+    </p>
+
+    @if (Model.Enviado)
+    {
+        <div class="alert alert-success text-center">
+            Obrigado! Recebemos sua confirmação ❤️
+        </div>
+
+        <div class="text-center">
+            <a href="/" class="btn btn-primary">
+                Voltar para o início
+            </a>
+        </div>
+    }
+    else
+    {
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-0">
+
+                    @for (int i = 0; i < Model.Respostas.Count; i++)
+                    {
+                        var pessoa = Model.Convite!.Pessoas
+                        .First(p => p.Id == Model.Respostas[i].PessoaId);
+
+                        <input type="hidden"
+                               asp-for="Respostas[i].PessoaId"
+                               value="@pessoa.Id" />
+
+                        <div class="rsvp-row d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+
+                            <div class="fw-semibold">
+                                @pessoa.Nome
+                            </div>
+
+                            <!-- TOGGLE RSVP -->
+                            <div class="rsvp-toggle">
+
+                                <input type="radio"
+                                       id="sim_@pessoa.Id"
+                                       name="Respostas[@i].Vai"
+                                       value="true" />
+
+                                <label for="sim_@pessoa.Id" class="rsvp-btn sim">
+                                    Sim
+                                </label>
+
+                                <input type="radio"
+                                       id="nao_@pessoa.Id"
+                                       name="Respostas[@i].Vai"
+                                       value="false" />
+
+                                <label for="nao_@pessoa.Id" class="rsvp-btn nao">
+                                    Não
+                                </label>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    Mensagem para os noivos (opcional)
+                </label>
+                <textarea class="form-control"
+                          asp-for="Mensagem"
+                          rows="3"></textarea>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-100">
+                Enviar confirmação
+            </button>
+        </form>
+    }
+</div>

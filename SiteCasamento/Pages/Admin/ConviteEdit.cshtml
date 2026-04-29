@@ -1,0 +1,30 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.ConviteEditModel
+@{
+    ViewData["Title"] = "Editar Convite";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold">Editar Convite</h3>
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <form method="post" class="card p-4 shadow-sm border-0">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Convite.Id" />
+
+        <div class="mb-3">
+            <label class="form-label">Nome do convite</label>
+            <input class="form-control" asp-for="Convite.NomeExibicao" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Últimos 4 dígitos do telefone</label>
+            <input class="form-control" asp-for="Convite.TelefoneUltimos4" maxlength="4" />
+        </div>
+
+        <button class="btn btn-primary">Salvar</button>
+        <a class="btn btn-link" asp-page="/Admin/Convites">Cancelar</a>
+    </form>
+</div>

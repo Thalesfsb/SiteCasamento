@@ -1,0 +1,26 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.PessoaEditModel
+@{
+    ViewData["Title"] = "Editar Pessoa";
+}
+
+<div class="container mt-5" style="max-width:720px;">
+    <h3 class="fw-bold">Editar Pessoa</h3>
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <form method="post" class="card p-4 shadow-sm border-0">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Pessoa.Id" />
+        <input type="hidden" asp-for="Pessoa.ConviteId" />
+
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input class="form-control" asp-for="Pessoa.Nome" />
+        </div>
+
+        <button class="btn btn-primary">Salvar</button>
+        
+    </form>
+</div>

@@ -1,0 +1,55 @@
+﻿@page
+@model SiteCasamento.Pages.Admin.ConvitePessoasModel
+@{
+    ViewData["Title"] = "Pessoas do Convite";
+}
+
+<div class="container mt-5">
+
+    <a asp-page="/Admin/Convites"
+       class="btn btn-link px-0 mb-4">
+        <i class="bi bi-arrow-left"></i> Voltar para Convites
+    </a>
+
+    <!-- CABEÇALHO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Pessoas do Convite</h3>
+
+        <a asp-page="/Admin/PessoaCreate"
+           asp-route-conviteId="@Model.Convite!.Id"
+           class="btn btn-primary">
+            <i class="bi bi-plus"></i> Adicionar pessoa
+        </a>
+
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Vai?</th>
+                    <th>Data resposta</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Convite!.Pessoas.OrderBy(x => x.Nome))
+                {
+                    <tr>
+                        <td class="fw-semibold">@p.Nome</td>
+                        <td>@(p.Vai is null ? "—" : (p.Vai.Value ? "Sim" : "Não"))</td>
+                        <td>@(p.DataResposta?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary"
+                               asp-page="/Admin/PessoaEdit" asp-route-id="@p.Id">Editar</a>
+
+                            <a class="btn btn-sm btn-outline-danger"
+                               asp-page="/Admin/PessoaDelete" asp-route-id="@p.Id">Excluir</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

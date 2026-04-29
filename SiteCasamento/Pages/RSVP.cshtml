@@ -1,0 +1,39 @@
+﻿@page
+@model RSVPModel
+@{
+    ViewData["Title"] = "Confirmar Presença";
+}
+
+<div class="container mt-5" style="max-width: 600px;">
+    <a href="/" class="btn btn-link px-0 mb-3">
+        <i class="bi bi-arrow-left"></i> Voltar para a página inicial
+    </a>
+    <h2 class="title-serif mb-3">Confirmação de Presença</h2>
+
+    <p class="text-muted mb-4">
+        Informe o nome do convite e os últimos 4 dígitos do telefone.
+    </p>
+
+    @if (!string.IsNullOrEmpty(Model.Erro))
+    {
+        <div class="alert alert-warning">@Model.Erro</div>
+    }
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Nome do convite</label>
+            <input class="form-control" asp-for="NomeConvite" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Últimos 4 dígitos do telefone</label>
+            <input class="form-control" asp-for="Ultimos4Telefone" />
+        </div>
+
+        <button class="btn btn-primary w-100">
+            Continuar
+        </button>
+    </form>
+</div>

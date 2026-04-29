@@ -1,0 +1,185 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Nosso Casamento";
+}
+
+<!-- =====================
+     HERO
+===================== -->
+<section class="hero-wrapper">
+    <div class="hero">
+
+        <!-- FLORES DECORATIVAS -->
+        <img src="/images/flores/esquerda.png"
+             class="hero-flower left"
+             alt="" />
+
+        <img src="/images/flores/direita.png"
+             class="hero-flower right"
+             alt="" />
+
+        <!-- CONTEÚDO -->
+        <div class="hero-overlay">
+
+            <h1 class="hero-title">Ana Laura &amp; Júlio</h1>
+
+            <p class="hero-subtitle">
+                06 de junho de 2026 • São José dos Campos/SP
+            </p>
+
+            <!-- CONTAGEM REGRESSIVA -->
+            <div class="hero-countdown">
+                <div class="count-box">
+                    <span id="days">0</span>
+                    <small>Dias</small>
+                </div>
+                <div class="count-box">
+                    <span id="hours">0</span>
+                    <small>Horas</small>
+                </div>
+                <div class="count-box">
+                    <span id="minutes">0</span>
+                    <small>Min</small>
+                </div>
+                <div class="count-box">
+                    <span id="seconds">0</span>
+                    <small>Seg</small>
+                </div>
+            </div>
+
+            <!-- AÇÕES -->
+            <div class="hero-actions mt-4">
+                <a href="/RSVP" class="btn btn-primary btn-lg">
+                    Confirmar Presença
+                </a>
+
+                <a href="/Presentes" class="btn btn-outline-light btn-lg">
+                    Lista de Presentes
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- =====================
+     GALERIA
+===================== -->
+<div class="container my-5">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-4">
+            <div class="gallery-card gallery-zoom">
+                <img src="/images/casal/galeria1.jpg"
+                     alt="Foto do casal 1" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="gallery-card gallery-zoom">
+                <img src="/images/casal/galeria2.jpg"
+                     alt="Foto do casal 2" />
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="gallery-card gallery-zoom">
+                <img src="/images/casal/galeria3.jpg"
+                     alt="Foto do casal 3" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- =====================
+     RECEPÇÃO
+===================== -->
+<div class="container text-center my-5">
+
+    <div class="reception-section mb-5">
+        <h3 class="title-serif mb-3">Recepção</h3>
+
+        <p class="fs-5">
+            A recepção ocorrerá no espaço <strong>J A Eventos</strong>
+        </p>
+
+        <p class="text-muted">
+            <i class="bi bi-calendar-event"></i>
+            Sábado, 06 de junho de 2026 &nbsp;•&nbsp;
+            <i class="bi bi-clock"></i> 12h
+        </p>
+
+        <p class="text-muted mb-4">
+            Rua Oito, 665 – Santa Cecília II<br />
+            São José dos Campos – SP
+        </p>
+
+        <h3 class="title-serif mb-3">Como chegar</h3>
+
+        <div class="ratio ratio-4x3 rounded shadow-sm overflow-hidden mb-3 reception-map">
+            <iframe src="https://www.google.com/maps?q=Rua+Oito,+665+-+Santa+Cec%C3%ADlia+II,+S%C3%A3o+Jos%C3%A9+dos+Campos+-+SP&output=embed"
+                    style="border:0;"
+                    loading="lazy">
+            </iframe>
+        </div>
+
+        <a href="https://www.google.com/maps/search/?api=1&query=Rua+Oito,+665+-+Santa+Cec%C3%ADlia+II,+S%C3%A3o+Jos%C3%A9+dos+Campos+-+SP"
+           target="_blank"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-geo-alt"></i> Abrir no Google Maps
+        </a>
+    </div>
+
+    <!-- PRESENTES -->
+    <div class="gift-section">
+        <h3 class="title-serif mb-3">Lista de Presentes</h3>
+
+        <p>
+            Independente da escolha, o mais importante para nós é a sua presença ❤️
+        </p>
+
+        <p class="text-muted">
+            Organizamos algumas opções para facilitar:
+        </p>
+
+        <ul class="list-unstyled text-muted">
+            <li>• Lista online com envio direto</li>
+            <li>• Contribuição via PIX</li>
+            <li class="mt-2">Lojas físicas:</li>
+            <li>Florindo Magazine (Passos - MG)</li>
+            <li>Havan (São José dos Campos - SP)</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const targetDate = new Date("2026-06-06T12:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                ["days","hours","minutes","seconds"].forEach(id => {
+                    document.getElementById(id).textContent = 0;
+                });
+                return;
+            }
+
+            document.getElementById("days").textContent =
+                Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").textContent =
+                Math.floor((diff / (1000 * 60 * 60)) % 24);
+            document.getElementById("minutes").textContent =
+                Math.floor((diff / (1000 * 60)) % 60);
+            document.getElementById("seconds").textContent =
+                Math.floor((diff / 1000) % 60);
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+}

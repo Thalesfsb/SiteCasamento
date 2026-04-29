@@ -1,0 +1,87 @@
+﻿@page
+@model PresentesModel
+@using SiteCasamento.Models
+@{
+    ViewData["Title"] = "Lista de Presentes";
+}
+
+<div class="container mt-5">
+
+    <!-- VOLTAR -->
+    <a href="/" class="btn btn-link px-0 mb-4">
+        <i class="bi bi-arrow-left"></i> Voltar para a página inicial
+    </a>
+
+    <h2 class="title-serif text-center mb-2">
+        Lista de Presentes
+    </h2>
+
+    <p class="text-center text-muted mb-5">
+        Escolha um presente com carinho 💚
+    </p>
+
+    <div class="row g-4 justify-content-center">
+        @foreach (var p in Model.Presentes)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="presente-card h-100 text-center">
+
+                    <!-- IMAGEM (opcional) -->
+                    @if (!string.IsNullOrEmpty(p.ImagemUrl))
+                    {
+                        <img src="@p.ImagemUrl"
+                             alt="@p.Nome"
+                             class="img-fluid rounded mb-2"
+                             style="max-height:120px; object-fit:contain;" />
+                    }
+
+                    <!-- NOME -->
+                    <h5 class="title-serif">
+                        @p.Nome
+                    </h5>
+
+                    <!-- DESCRIÇÃO (se existir) -->
+                    @if (!string.IsNullOrWhiteSpace(p.Descricao))
+                    {
+                        <p class="text-muted small mb-1">
+                            @p.Descricao
+                        </p>
+                    }
+
+                    <!-- VALOR -->
+                    <p class="presente-valor mb-2">
+                        @if (p.Valor > 0)
+                        {
+                            <span>R$ @p.Valor.ToString("N2")</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Valor a definir</span>
+                        }
+                    </p>
+
+                    <!-- STATUS -->
+                    <div class="mb-2">
+                        @await Html.PartialAsync("_StatusBadge", p.Status)
+                    </div>
+
+                    <!-- AÇÃO -->
+                    @if (p.Status == StatusPresente.Disponivel)
+                    {
+                        <a href="/ReservarPresente?id=@p.Id"
+                           class="btn btn-primary w-100">
+                            Presentear
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-secondary w-100" disabled>
+                            Indisponível
+                        </button>
+                    }
+
+                </div>
+            </div>
+        }
+    </div>
+</div>

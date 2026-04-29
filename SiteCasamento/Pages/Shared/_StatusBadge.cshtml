@@ -1,0 +1,17 @@
+﻿@using SiteCasamento.Models
+@model StatusPresente
+
+@{
+    // Decide cor, ícone e texto de forma consistente em todo o site
+    var (css, icon, text) = Model switch
+    {
+        StatusPresente.Disponivel => ("bg-success bg-opacity-75", "bi-gift", "Disponível"),
+        StatusPresente.Reservado => ("bg-warning bg-opacity-75 text-dark", "bi-lock", "Reservado"),
+        StatusPresente.Presenteado => ("bg-secondary bg-opacity-75", "bi-heart-fill", "Presenteado"),
+        _ => ("bg-light text-dark", "bi-question-circle", "Indefinido")
+    };
+}
+
+<span class="badge @css">
+    <i class="bi @icon me-1"></i>@text
+</span>
