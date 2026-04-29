@@ -1,24 +1,30 @@
 ﻿@page
 @model SiteCasamento.Pages.Admin.LoginModel
 @{
-    ViewData["Title"] = "Admin - Login";
+    ViewData["Title"] = "Login Admin";
 }
 
-<div class="container mt-5" style="max-width:420px;">
-    <h3 class="fw-bold mb-3">Área Administrativa</h3>
+<div class="container mt-5" style="max-width: 420px;">
+    <h3 class="title-serif text-center mb-4">Área Administrativa</h3>
 
     @if (!string.IsNullOrEmpty(Model.Erro))
     {
-        <div class="alert alert-warning">@Model.Erro</div>
+        <div class="alert alert-danger text-center">
+            @Model.Erro
+        </div>
     }
 
     <form method="post">
-        @Html.AntiForgeryToken()
         <div class="mb-3">
             <label class="form-label">Senha</label>
-            <input type="password" class="form-control" asp-for="Senha" />
+            <input type="password"
+                   class="form-control"
+                   asp-for="Senha"
+                   required />
         </div>
 
-        <button class="btn btn-primary w-100">Entrar</button>
+        <button class="btn btn-primary w-100">
+            Entrar
+        </button>
     </form>
 </div>

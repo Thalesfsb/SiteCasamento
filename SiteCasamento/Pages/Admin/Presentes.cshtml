@@ -8,23 +8,18 @@
 
 <div class="container mt-5">
 
-    <!-- VOLTAR -->
-    <a asp-page="/Admin/Dashboard"
-       class="btn btn-link px-0 mb-3">
+    <a asp-page="/Admin/Dashboard" class="btn btn-link px-0 mb-3">
         <i class="bi bi-arrow-left"></i> Voltar para o Dashboard
     </a>
 
-    <!-- CABEÇALHO -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0">Presentes</h3>
 
-        <a asp-page="/Admin/PresenteCreate"
-           class="btn btn-primary">
+        <a asp-page="/Admin/PresenteCreate" class="btn btn-primary">
             <i class="bi bi-plus"></i> Novo presente
         </a>
     </div>
 
-    <!-- FILTROS -->
     <div class="mb-3">
         <a asp-page="./Presentes"
            class="btn btn-sm btn-outline-secondary @(Model.Status == null ? "active" : "")">
@@ -50,10 +45,8 @@
         </a>
     </div>
 
-    <!-- TABELA -->
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
-
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
@@ -85,18 +78,13 @@
                                         <span class="badge bg-primary">Presenteado</span>
                                         break;
                                 }
-                            </td>
+                        </td>
 
-                            <td>
-                                @if (!string.IsNullOrEmpty(p.ReservadoPor))
-                                {
-                                    @p.ReservadoPor
-                                }
-                                else
-                                {
-                                    <span class="text-muted">—</span>
-                                }
-                            </td>
+                        <td>
+                            @(string.IsNullOrEmpty(p.ReservadoPor)
+                                                        ? Html.Raw("<span class='text-muted'>—</span>")
+                                                        : p.ReservadoPor)
+                        </td>
 
                             <td class="text-end">
                                 <a asp-page="/Admin/PresenteEdit"
@@ -106,11 +94,9 @@
                                 </a>
                             </td>
                         </tr>
-                    }
+                                        }
                 </tbody>
             </table>
-
         </div>
     </div>
-
 </div>

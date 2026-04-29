@@ -1,14 +1,19 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SiteCasamento.Data;
 using SiteCasamento.Models;
 
 namespace SiteCasamento.Pages.Admin;
 
+[Authorize]
 public class DashboardModel : PageModel
 {
     private readonly AppDbContext _db;
 
-    public DashboardModel(AppDbContext db) => _db = db;
+    public DashboardModel(AppDbContext db)
+    {
+        _db = db;
+    }
 
     // ===== RSVP =====
     public int TotalConvites { get; set; }
@@ -44,6 +49,14 @@ public class DashboardModel : PageModel
         PresentesPresenteados = _db.Presentes.Count(p => p.Status == StatusPresente.Presenteado);
 
         // ===== Pagamentos =====
-        PagamentosPendentes = _db.PagamentosPix.Count(p => !p.Confirmado);
+        try
+        {
+            PagamentosPendentes = _db.PagamentosPix.Count(p => !p.Confirmado);
+        }
+        catch
+        {
+            // Se tabela ainda não existir ou estiver vazia
+            PagamentosPendentes = 0;
+        }
     }
 }

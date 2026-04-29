@@ -6,62 +6,108 @@ using SiteCasamento.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
+/* =====================================================
+   CONFIGURAÇÃO (LOCAL + AZURE)
+===================================================== */
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables(); // Admin__Senha no Azure
 
-// Banco
-
-//var dbPath = Path.Combine(builder.Environment.ContentRootPath, "casamento.db");
-
-//builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
-
-
-var dataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
-Directory.CreateDirectory(dataDir);
-
-var dbPath = Path.Combine(dataDir, "casamento.db");
-
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={dbPath}"));
-
-
-builder.Services.AddScoped<ReservaService>();
-builder.Services.AddScoped<PixService>();
-
-builder.Services.Configure<PixOptions>(builder.Configuration.GetSection("Pix"));
-
-// Authentication (Cookie)
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        // Para onde mandar se tentar acessar /Admin sem estar logado
-        options.LoginPath = "/Admin/Login";
-
-        // Boas práticas simples
-        options.Cookie.HttpOnly = true;  // JS não acessa o cookie
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // só HTTPS
-    });
-
-// Authorization
-builder.Services.AddAuthorization();
-
-// Protege a pasta /Admin inteira, exceto a página de login
+/* =====================================================
+   RAZOR PAGES + AUTHORIZATION
+===================================================== */
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeFolder("/Admin");
     options.Conventions.AllowAnonymousToPage("/Admin/Login");
 });
 
+/* =====================================================
+   SESSION (PODE SER USADA EM OUTROS FLUXOS)
+===================================================== */
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+/* =====================================================
+   BANCO DE DADOS (SQLITE EM App_Data)
+===================================================== */
+var dataDir = Path.Combine(builder.Environment.ContentRootPath, "App_Data");
+Directory.CreateDirectory(dataDir);
+
+var dbPath = Path.Combine(dataDir, "casamento.db");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}")
+);
+
+/* =====================================================
+   SERVICES
+===================================================== */
+builder.Services.AddScoped<ReservaService>();
+builder.Services.AddScoped<PixService>();
+
+builder.Services.Configure<PixOptions>(
+    builder.Configuration.GetSection("Pix")
+);
+
+/* =====================================================
+   AUTHENTICATION (COOKIE)
+===================================================== */
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Admin/Login";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    });
+
+builder.Services.AddAuthorization();
+
+/* =====================================================
+   BUILD
+===================================================== */
 var app = builder.Build();
+
+/* =====================================================
+   CRIA O BANCO E AS TABELAS NO STARTUP (AZURE)
+===================================================== */
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+    DatabaseSeeder.Seed(db);
+}
+
+/* =====================================================
+   PIPELINE
+===================================================== */
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-// Ordem importa
+// ORDEM CORRETA
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
 app.Run();
+
 
 // Seed apenas em Development
 //if (app.Environment.IsDevelopment())

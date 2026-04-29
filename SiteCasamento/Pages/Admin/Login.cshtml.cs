@@ -1,51 +1,73 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace SiteCasamento.Pages.Admin;
 
 public class LoginModel : PageModel
 {
-    private readonly IConfiguration _config;
+    private readonly IConfiguration _configuration;
 
-    public LoginModel(IConfiguration config)
+    public LoginModel(IConfiguration configuration)
     {
-        _config = config;
+        _configuration = configuration;
     }
 
     [BindProperty]
-    public string Senha { get; set; } = "";
+    public string Senha { get; set; } = string.Empty;
 
     public string? Erro { get; set; }
 
-    public void OnGet() { }
-
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
-        var senhaAdmin = _config["Admin:Senha"];
+        var senhaAdmin = _configuration["Admin:Senha"];
 
-        if (string.IsNullOrEmpty(senhaAdmin) || Senha != senhaAdmin)
+        if (string.IsNullOrWhiteSpace(senhaAdmin))
+        {
+            Erro = "Senha do administrador não configurada.";
+            return Page();
+        }
+
+        if (Senha != senhaAdmin)
         {
             Erro = "Senha inválida.";
             return Page();
         }
 
-        // Claims = “declarações” sobre o usuário
+        // CRIA IDENTIDADE
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, "admin"),
-            new Claim(ClaimTypes.Role, "Admin")
+            new Claim(ClaimTypes.Name, "Admin")
         };
 
-        // Identity + Principal = usuário autenticado no ASP.NET
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var identity = new ClaimsIdentity(
+            claims,
+            CookieAuthenticationDefaults.AuthenticationScheme
+        );
+
         var principal = new ClaimsPrincipal(identity);
 
-        // SignIn = cria o cookie de autenticação
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,principal);
+        // CRIA COOKIE DE AUTENTICAÇÃO
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            principal
+        );
+
+        // REDIRECIONA CORRETAMENTE
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
 
         return RedirectToPage("/Admin/Dashboard");
+    }
+
+    public async Task<IActionResult> OnGetLogout()
+    {
+        await HttpContext.SignOutAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme
+        );
+
+        return RedirectToPage("/Admin/Login");
     }
 }
