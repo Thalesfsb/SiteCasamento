@@ -1,8 +1,9 @@
 ﻿@page
 @model ReservarPresenteModel
 @using SiteCasamento.Models
+
 @{
-    ViewData["Title"] = "Reservar Presente";
+    ViewData["Title"] = "Presentear";
 }
 
 <div class="container mt-5" style="max-width: 720px;">
@@ -19,13 +20,26 @@
                 @Model.Presente?.Nome
             </h3>
 
-            <p class="text-muted mb-3">
-                @Model.Presente?.Descricao
-            </p>
+            @if (!string.IsNullOrWhiteSpace(Model.Presente?.Descricao))
+            {
+                <p class="text-muted mb-3">
+                    @Model.Presente.Descricao
+                </p>
+            }
 
             <p class="fw-bold mb-4">
-                Valor sugerido: R$ @Model.Presente?.Valor.ToString("N2")
+                Valor sugerido:
+                @(Model.Presente?.Valor > 0
+                                ? $"R$ {Model.Presente.Valor:N2}"
+                                : "Valor a definir")
             </p>
+
+            @if (!string.IsNullOrEmpty(Model.MensagemErro))
+            {
+                <div class="alert alert-warning">
+                    @Model.MensagemErro
+                </div>
+            }
 
             @if (Model.Sucesso)
             {
@@ -34,24 +48,41 @@
                     Obrigado, <strong>@Model.NomeConvidado</strong>.
                 </div>
 
+                <div class="alert alert-light text-center mb-5">
+                    <strong>📦 Endereço para entrega dos presentes:</strong><br />
+                    Rua Síria, 166, ap 31<br />
+                    Parque São Jorge – São Paulo/SP<br />
+                    CEP 03086-040
+                </div>
+
                 <p class="text-muted mb-4">
-                    Agora você pode escolher como deseja presentear.
+                    Agora escolha como deseja comprar o presente:
                 </p>
 
-                <div class="d-grid gap-3">
+                <div class="d-grid gap-2">
+
+                    @* COMPRA EXTERNA (AÇÃO SECUNDÁRIA) *@
+                    @if (!string.IsNullOrWhiteSpace(Model.Presente!.LinkCompra))
+                    {
+                        <a href="@Model.Presente.LinkCompra"
+                           target="_blank"
+                           rel="noopener"
+                           class="btn btn-outline-success btn-secondary-action">
+                            🛒 Comprar pelo site
+                        </a>
+
+                        <a href="/ConfirmarCompraExterna?id=@Model.Presente.Id"
+                           class="btn btn-outline-success btn-secondary-action">
+                            ✅ Já comprei pelo site
+                        </a>
+                    }
+
+                    @* PIX – AÇÃO PRINCIPAL *@
                     <a href="/Pix/@Model.Presente!.Id"
-                       class="btn btn-primary btn-lg">
-                        Presentear via PIX
+                       class="btn btn-success btn-primary-action mt-1">
+                        💚 Presentear via PIX
                     </a>
 
-                    <a href="/ConfirmarCompraExterna?id=@Model.Presente!.Id"
-                       class="btn btn-outline-primary">
-                        Já comprei em outra loja
-                    </a>
-
-                    <a href="/Presentes" class="btn btn-link">
-                        Voltar para a lista
-                    </a>
                 </div>
             }
             else

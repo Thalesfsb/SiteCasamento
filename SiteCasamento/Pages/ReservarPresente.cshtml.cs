@@ -23,11 +23,8 @@ public class ReservarPresenteModel : PageModel
 
     public IActionResult OnGet(int id)
     {
-        Presente = _db.Presentes
-            .AsNoTracking()
-            .FirstOrDefault(p => p.Id == id);
-
-        return Presente is null ? NotFound() : Page();
+        Presente = _db.Presentes.AsNoTracking().FirstOrDefault(p => p.Id == id);
+        return Presente == null ? NotFound() : Page();
     }
 
     public IActionResult OnPost(int id)
@@ -52,7 +49,7 @@ public class ReservarPresenteModel : PageModel
 
         if (linhasAfetadas == 0)
         {
-            MensagemErro = "Ops! Esse presente não está mais disponível. Escolha outro.";
+            MensagemErro = "Ops! Esse presente não está mais disponível.";
             Presente = _db.Presentes.AsNoTracking().FirstOrDefault(p => p.Id == id);
             return Page();
         }

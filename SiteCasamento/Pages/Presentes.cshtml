@@ -68,21 +68,10 @@
                     <!-- AÇÕES -->
                     @if (p.Status == StatusPresente.Disponivel)
                     {
-                        if (!string.IsNullOrWhiteSpace(p.LinkCompra))
-                        {
-                            <!-- LINK EXTERNO -->
-                            <a href="@p.LinkCompra"
-                               target="_blank"
-                               rel="noopener"
-                               class="btn btn-outline-primary w-100 mb-1">
-                                Ver produto
-                            </a>
-                        }
-
                         <!-- FLUXO DO SITE (PIX / RESERVA) -->
                         <a href="/ReservarPresente?id=@p.Id"
                            class="btn btn-primary w-100">
-                            Presentear
+                            🎁 Presentear
                         </a>
                     }
                     else
