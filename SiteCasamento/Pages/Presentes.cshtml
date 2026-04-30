@@ -17,69 +17,76 @@
     </h2>
 
     <p class="text-center text-muted mb-5">
-        Escolha um presente com carinho 💚
+        Independente da escolha, o mais importante para nós é a sua presença ❤️
     </p>
 
     <div class="row g-4 justify-content-center">
         @foreach (var p in Model.Presentes)
         {
             <div class="col-6 col-md-4 col-lg-3">
-                <div class="presente-card h-100 text-center">
+                <div class="presente-card h-100 text-center d-flex flex-column">
 
-                    <!-- IMAGEM -->
-                    @if (!string.IsNullOrWhiteSpace(p.ImagemUrl))
-                    {
-                        <div class="presente-img-wrapper">
-                            <img src="@p.ImagemUrl"
-                                 alt="@p.Nome" />
-                        </div>
-                    }
+                    <!-- CONTEÚDO DO CARD -->
+                    <div class="presente-content">
 
-                    <!-- NOME -->
-                    <h5 class="title-serif">
-                        @p.Nome
-                    </h5>
-
-                    <!-- DESCRIÇÃO -->
-                    @if (!string.IsNullOrWhiteSpace(p.Descricao))
-                    {
-                        <p class="text-muted small mb-1">
-                            @p.Descricao
-                        </p>
-                    }
-
-                    <!-- VALOR -->
-                    <p class="presente-valor mb-2">
-                        @if (p.Valor > 0)
+                        <!-- IMAGEM -->
+                        @if (!string.IsNullOrWhiteSpace(p.ImagemUrl))
                         {
-                            <span>R$ @p.Valor.ToString("N2")</span>
+                            <div class="presente-img-wrapper mb-2">
+                                <img src="@p.ImagemUrl"
+                                     alt="@p.Nome"
+                                     class="img-fluid" />
+                            </div>
+                        }
+
+                        <!-- NOME -->
+                        <h5 class="title-serif mb-1">
+                            @p.Nome
+                        </h5>
+
+                        <!-- DESCRIÇÃO -->
+                        @if (!string.IsNullOrWhiteSpace(p.Descricao))
+                        {
+                            <p class="text-muted small mb-1">
+                                @p.Descricao
+                            </p>
+                        }
+
+                        <!-- VALOR -->
+                        <p class="presente-valor mb-2">
+                            @if (p.Valor > 0)
+                            {
+                                <span>R$ @p.Valor.ToString("N2")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Valor a definir</span>
+                            }
+                        </p>
+
+                        <!-- STATUS -->
+                        <div class="mb-2">
+                            @await Html.PartialAsync("_StatusBadge", p.Status)
+                        </div>
+
+                    </div>
+
+                    <!-- AÇÃO (SEMPRE NO FUNDO) -->
+                    <div class="presente-action mt-auto">
+                        @if (p.Status == StatusPresente.Disponivel)
+                        {
+                            <a href="/ReservarPresente?id=@p.Id"
+                               class="btn btn-primary w-100">
+                                🎁 Presentear
+                            </a>
                         }
                         else
                         {
-                            <span class="text-muted">Valor a definir</span>
+                            <button class="btn btn-outline-secondary w-100" disabled>
+                                Indisponível
+                            </button>
                         }
-                    </p>
-
-                    <!-- STATUS -->
-                    <div class="mb-2">
-                        @await Html.PartialAsync("_StatusBadge", p.Status)
                     </div>
-
-                    <!-- AÇÕES -->
-                    @if (p.Status == StatusPresente.Disponivel)
-                    {
-                        <!-- FLUXO DO SITE (PIX / RESERVA) -->
-                        <a href="/ReservarPresente?id=@p.Id"
-                           class="btn btn-primary w-100">
-                            🎁 Presentear
-                        </a>
-                    }
-                    else
-                    {
-                        <button class="btn btn-outline-secondary w-100" disabled>
-                            Indisponível
-                        </button>
-                    }
 
                 </div>
             </div>
